@@ -44,6 +44,7 @@ const clientTwitch = new tmi.client(options);
 // Début des commandes Discord
 
 var prefixDiscord = config.discord.prefix;
+
 //Commande test pour discord
 clientDiscord.on('message', message => {
 
@@ -89,23 +90,23 @@ clientTwitch.on('chat', (channel, user, message, self) => {
 		let command = commands[1];
 
 		//Un paramètre mais désactivé pour raison que l'on utilise pas.
-        // let param = commands[2];
+        	// let param = commands[2];
 		
 		//Liste des commandes
-        switch(command){
+       		switch(command){
 
-			//Commande de test
-            case "test":
-                clientTwitch.say(channel, `${user['display-name']}, Vous avez taper la commande !test !`)
-				ChannelLog.send(`[LOG] : Un viewers à utilisé la commande test !**`)
-			break;
+		//Commande de test
+		    case "test":
+			clientTwitch.say(channel, `${user['display-name']}, Vous avez taper la commande !test !`)
+			ChannelLog.send(`[LOG] : Un viewers à utilisé la commande test !**`)
+		    break;
 
-			//Message d'erreur si la commande n'existe pas.
-            default:
-               clientTwitch.say(channel, `${user['display-name']}, La Commande '` + command + "'' est non reconnue. Tapez " + prefix + "help pour la liste des commandes de " + client.getUsername());
-			//    ChannelLog.send(`[LOG] : La commande n'existe pas ! `)
-		}
-    }
+				//Message d'erreur si la commande n'existe pas.
+		    default:
+		       clientTwitch.say(channel, `${user['display-name']}, La Commande '` + command + "'' est non reconnue. Tapez " + prefix + "help pour la liste des commandes de " + client.getUsername());
+			//ChannelLog.send(`[LOG] : La commande n'existe pas ! `)
+			}
+    	}
 	
 });
 
@@ -118,13 +119,13 @@ clientTwitch.on("subscription", function (channel, username, method, message, us
 	// Log sur discord
 	ChannelLog.send(`[LOG] : ${username} a sub à la chaîne ! Son Message : ${message}`)
 	//Message sur le tchat de twitch
-    clientTwitch.action(channel, `${username} a sub à la chaîne!`)
+	clientTwitch.action(channel, `${username} a sub à la chaîne!`)
 });
 
 //Event quand une personne resub sur la chaine twitch !
 clientTwitch.on("resub", function (channel, username, months, message, userstate, methods) {
 	// Log sur discord
-    ChannelLog.send(`[LOG] : ${username} est sub à la chaîne depuis ${months} mois ! Son message : ${message}`)
+	ChannelLog.send(`[LOG] : ${username} est sub à la chaîne depuis ${months} mois ! Son message : ${message}`)
 	// Message sur le tchat de twitch
 	clientTwitch.action(channel, `${username} est sub à la chaîne depuis ${months} mois ! `)
 });
@@ -132,7 +133,7 @@ clientTwitch.on("resub", function (channel, username, months, message, userstate
 //Event quand une personne donne des cheer sur la chaîne twitch !
 clientTwitch.on("cheer", function (channel, userstate, message) {
 	// Log sur discord
-    ChannelLog.send(`[LOG] : ${userstate.username} a donné ${userstate.bits} bits !`)
+	ChannelLog.send(`[LOG] : ${userstate.username} a donné ${userstate.bits} bits !`)
 });
 
 //Event quand une personne host sur la chaîne twitch !
@@ -169,8 +170,8 @@ clientTwitch.on("vips", (channel, vips) => {
 
 // Event quand une personne supprime un messages sur la chaîne twitch !
 clientTwitch.on("messagedeleted", (channel, username, deletedMessage, userstate) => {
-    // Message LOGS
-    ChannelLog.send(`[LOG] : Le message de ${username} a était supprimé. Il contenait: ${deletedMessage}`)
+	// Message LOGS
+	ChannelLog.send(`[LOG] : Le message de ${username} a était supprimé. Il contenait: ${deletedMessage}`)
 });
 
 // Evvent quand une personne rejion là première fois la chaîne twitch
