@@ -1,15 +1,15 @@
 {
     "twitch" : { 
-        "oauth" : "", 
-        "username" : "",
-        "prefix" : ""
+        "oauth" : "oauth du bot (https://twitchapps.com/tmi/)", 
+        "username" : "username du bot Twitch",
+        "prefix" : "Préfix du bot Twitch", 
     },
     "discord" : { 
-        "token" : "", 
-        "log" : "", 
-        "prefix" : ""
+        "token" : "Clé du bot Discord", 
+        "log" : "Id du canal de log sur Discord", 
+        "prefix" : "Préfix du bot Discord", 
     },
     "streameur" : {
-        "username" : "" 
+        "username" : "Username de la chaîne où le bot twitch feras la modération",  
     }
 }
