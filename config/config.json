@@ -1,0 +1,15 @@
+{
+    "twitch" : { 
+        "oauth" : "", 
+        "username" : "",
+        "prefix" : ""
+    },
+    "discord" : { 
+        "token" : "", 
+        "log" : "", 
+        "prefix" : ""
+    },
+    "streameur" : {
+        "username" : "" 
+    }
+}
