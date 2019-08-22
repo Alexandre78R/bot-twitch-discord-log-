@@ -81,21 +81,20 @@ clientTwitch.on('chat', (channel, user, message, self) => {
 	//Si le message via du bot il stop les fonctions.
 	if (self) return;
 
-	// client.say(channel, user['display-name'] + " a dit " + message );
-	let commands = commandParser(message);
+		// client.say(channel, user['display-name'] + " a dit " + message );
+		let commands = commandParser(message);
 
-	//Les agument des commandes après le prefix
-	if(commands){
-		// Nom de la commande
-		let command = commands[1];
+		//Les agument des commandes après le prefix
+		if(commands){
+			// Nom de la commande
+			let command = commands[1];
 
 		//Un paramètre mais désactivé pour raison que l'on utilise pas.
         	// let param = commands[2];
 		
 		//Liste des commandes
-       		switch(command){
-
-		//Commande de test
+       	switch(command){
+			//Commande de test
 		    case "test":
 			clientTwitch.say(channel, `${user['display-name']}, Vous avez taper la commande !test !`)
 			ChannelLog.send(`[LOG] : Un viewers à utilisé la commande test !**`)
@@ -105,8 +104,8 @@ clientTwitch.on('chat', (channel, user, message, self) => {
 		    default:
 		       clientTwitch.say(channel, `${user['display-name']}, La Commande '` + command + "'' est non reconnue. Tapez " + prefix + "help pour la liste des commandes de " + client.getUsername());
 			//ChannelLog.send(`[LOG] : La commande n'existe pas ! `)
-			}
-    	}
+		}
+    }
 	
 });
 
