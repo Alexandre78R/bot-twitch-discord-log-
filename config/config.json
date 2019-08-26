@@ -6,7 +6,11 @@
     },
     "discord" : { 
         "token" : "Clé du bot Discord", 
-        "log" : "Id du canal de log sur Discord", 
+        "channelLogCommande" : "Id du canal de log des commandes sur Discord",
+        "channelLogSub" : "Id du canal de log des subs sur Discord",
+        "channelLogTo" : "Id du canal de log des to sur Discord",
+        "channelLogMessage" : "Id du canal de log des messages sur Discord", 
+        "channelLog" : "Id du canal de log sur Discord",
         "prefix" : "Préfix du bot Discord", 
     },
     "streameur" : {

@@ -16,8 +16,20 @@ const clientDiscord = new Discord.Client();
 //Import de la configuration
 var config = require("./config/config.json");
 
+// Valeur null pour le canal de log commande sur discord
+var channelLogCommande = null;
+
+// Valeur null pour le canal de log sub sur discord
+var channelLogSub = null;
+
+// Valeur null pour le canal de log des to sur discord
+var channelLogTo = null;
+
+// Valeur null pour le canal de log des Messages sur discord
+var channelLogMessage = null;
+
 // Valeur null pour le canal de log sur discord
-var ChannelLog = null;
+var channelLog = null;
 
 //Nom de la chaine ou le bot fait la modération sur twitch
 var channel1 = config.streameur.username
@@ -47,7 +59,7 @@ clientTwitch.connect();
 //Message d'allumage du bot sur le tchat twitch
 clientTwitch.on('connected', (adress, port) => {
     console.log("[Twitch] : " + clientTwitch.getUsername() + " s'est connecté sur : " + adress + ", port : " + port);
-    clientTwitch.action(channel1, 'Bonjour , je suis le bot en configuration. j"arrive avec le compte bot !');
+    clientTwitch.action(channel1, 'Bonsoir tous mondes !');
 });
 
 //Fin connexion du bot twitch
@@ -75,14 +87,30 @@ clientDiscord.login(config.discord.token);
 clientDiscord.on('ready', () => {
 	//Génération du profils du bot sur discord.
 	clientDiscord.user.setPresence({ game: { name: "En développement By Alexandre78R", type : "STREAMING", url: "https://www.twitch.tv/jaxoou"}});
-	//Fix l'id du channel log sur discord
-	ChannelLog = clientDiscord.channels.get(config.discord.log);
+	//Fix l'id des channel de log sur discord
+	channelLogCommande = clientDiscord.channels.get(config.discord.channelLogCommande);
+	channelLogSub = clientDiscord.channels.get(config.discord.channelLogSub);
+	channelLogTo = clientDiscord.channels.get(config.discord.channelLogTo);
+	channelLogMessage = clientDiscord.channels.get(config.discord.channelLogMessage);
+	channelLog = clientDiscord.channels.get(config.discord.channelLog);
 	
-	//Vérification du channel de log sur discord
-	if(ChannelLog === undefined){
+	//Vérification des channels de log sur discord
+	if(channelLogCommande === undefined){
+		console.log("[Discord] : Attention vous n'avez pas définie le channel log des commandes ou il est introuvable !")
+	} else if(channelLogSub === undefined){
+		console.log("[Discord] : Attention vous n'avez pas définie le channel log des subs ou il est introuvable !")
+	} else if(channelLogTo === undefined){
+		console.log("[Discord] : Attention vous n'avez pas définie le channel log des to ou il est introuvable !")
+	} else if(channelLogMessage === undefined){
+		console.log("[Discord] : Attention vous n'avez pas définie le channel log des messages ou il est introuvable !")
+	} else if(channelLog === undefined){
 		console.log("[Discord] : Attention vous n'avez pas définie le channel log ou il est introuvable !")
 	}else{
-		console.log(`[Discord] : Mise en place du channel log sur ${ChannelLog.name}`)
+		console.log(`[Discord] : Mise en place du channel log des commandes sur ${channelLogCommande.name}`)
+		console.log(`[Discord] : Mise en place du channel log des subs sur ${channelLogSub.name}`)
+		console.log(`[Discord] : Mise en place du channel log des to sur ${channelLogTo.name}`)
+		console.log(`[Discord] : Mise en place du channel log des messages sur ${channelLogMessage.name}`)
+		console.log(`[Discord] : Mise en place du channel log sur ${channelLog.name}`)
 		console.log(`[Discord] : Connecté en tant que ${clientDiscord.user.tag}`)
 	}
 });
@@ -145,15 +173,26 @@ clientTwitch.on('chat', (channel, user, message, self) => {
        	switch(command){
 			//Commande de test
 		    case "test":
-			clientTwitch.say("alexandre78rg", `${user['display-name']}, Vous avez taper la commande !test !`)
-			ChannelLog.send(`[LOG] : Un viewers à utilisé la commande test !**`)
+			// clientTwitch.say(channel1, `${user['display-name']}, Vous avez taper la commande !test !`)
+
+			let test = new Discord.RichEmbed()
+			.setTitle(`[LOG] : Commande " ${prefixDiscord}test "`)
+			.setColor("#15f153")
+			.setDescription(`Un viewers à utilisé la commande " ${prefixDiscord}test " !`)
+			channelLogCommande.send(test);
+
+			// let message1 = new Discord.RichEmbed()
+			// .setTitle(`Message suprimé de username}`)
+			// .setColor("#15f153")
+			// .addField(`Le message de username} a était supprimé. Il contenait :`, `deletedMessage}`)
+			// channelLogTo.send(message1);
 			
 			break;
-			
 				//Message d'erreur si la commande n'existe pas.
 		    default:
-		       clientTwitch.say("alexandre78rg", `${user['display-name']}, La Commande '` + command + "'' est non reconnue. Tapez " + prefix + "help pour la liste des commandes de " + client.getUsername());
+		    //    clientTwitch.say("alexandre78rg", `${user['display-name']}, La Commande '` + command + "'' est non reconnue. Tapez " + prefix + "help pour la liste des commandes de " + client.getUsername());
 			//ChannelLog.send(`[LOG] : La commande n'existe pas ! `)
+			console.log(`La commande " ${command} " n'existe pas !`)
 		}
     }
 	
@@ -166,39 +205,82 @@ clientTwitch.on('chat', (channel, user, message, self) => {
 //Event quand une personne sub sur la chaine twitch !
 clientTwitch.on("subscription", function (channel, username, method, message, userstate) {
 	// Log sur discord
-	ChannelLog.send(`[LOG] : ${username} a sub à la chaîne ! Son Message : ${message}`)
+	let sub = new Discord.RichEmbed()
+	.setTitle(`Nouveau sub sur la chaîne !`)
+	.setColor("#15f153")
+	.setDescription(`Bienvenue à x !`)
+	channelLogSub.send(sub);
+
 	//Message sur le tchat de twitch
-	clientTwitch.action(channel1, `${username} a sub à la chaîne!`)
+	clientTwitch.action(channel1, `${username} a sub à la chaîne! Bienvenue à toi !`)
+
+	console.log("Method", method)
 });
 
 //Event quand une personne resub sur la chaine twitch !
 clientTwitch.on("resub", function (channel, username, months, message, userstate, methods) {
-	// Log sur discord
-	ChannelLog.send(`[LOG] : ${username} est sub à la chaîne depuis ${months} mois ! Son message : ${message}`)
+	// Log sur discord 
+	let resub = new Discord.RichEmbed()
+	.setTitle(`Nouveau re-sub sur la chaîne !`)
+	.setColor("#15f153")
+	.setDescription(`${username} est sub à la chaîne depuis ${months} mois ! Son message : ${message}`)
+	channelLogSub.send(resub);
+
 	// Message sur le tchat de twitch
 	clientTwitch.action(channel1, `${username} est sub à la chaîne depuis ${months} mois ! `)
+
+	console.log("Method", method)
 });
 
 //Event quand une personne donne des cheer sur la chaîne twitch !
 clientTwitch.on("cheer", function (channel, userstate, message) {
-	// Log sur discord
-	ChannelLog.send(`[LOG] : ${userstate.username} a donné ${userstate.bits} bits !`)
+
+	if (userstate.bits === 1){
+		let cheer1 = new Discord.RichEmbed()
+		.setTitle(`Nouveau re-sub sur la chaîne !`)
+		.setColor("#15f153")
+		.setDescription(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit !`)
+		channelLog.send(cheer1);
+
+		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit !`)
+	}else{
+		let cheer = new Discord.RichEmbed()
+		.setTitle(`Nouveau re-sub sur la chaîne !`)
+		.setColor("#15f153")
+		.setDescription(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
+		channelLog.send(cheer);
+
+		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
+	}
 });
 
 //Event quand une personne host sur la chaîne twitch !
 clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
-	// Message sur le tchat de twitch
-	clientTwitch.action(channel1, ` Merci pour le host ${username} ! ( ${viewers} )`)
-	ChannelLog.send(`[LOG] : Merci pour le host ${username} ! ( ${viewers} )`)
+
+	let host = new Discord.RichEmbed()
+	.setTitle(`Nouveau re-sub sur la chaîne !`)
+	.setColor("#15f153")
+	.setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
+	channelLog.send(host);
+
+	clientTwitch.action(channel1, ` Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
 });
 
 //Event quand une personne to sur la chaîne twitch !
 clientTwitch.on("timeout", (channel, username, reason, duration, userstate) => {
 	// client.action(channel, `L'utilisateur "${username}" est to pendant ${duration} !`)
 	if(duration === 1){
-		ChannelLog.send(`[LOG] : L'utilisateur " ${username} " est to pendant ${duration} seconde ! `)
+		let to1 = new Discord.RichEmbed()
+		.setTitle(`To sur ${username}`)
+		.setColor("#15f153")
+		.setDescription(`L'utilisateur " ${username} " est to pendant ${duration} seconde ! `)
+		channelLogTo.send(to1);
 	}else{
-		ChannelLog.send(`[LOG] : L'utilisateur " ${username} " est to pendant ${duration} secondes ! `)	
+		let to = new Discord.RichEmbed()
+		.setTitle(`To sur ${username}`)
+		.setColor("#15f153")
+		.setDescription(`L'utilisateur " ${username} " est to pendant ${duration} secondes ! `)
+		channelLogTo.send(to);	
 	}
 });
 
@@ -219,8 +301,14 @@ clientTwitch.on("vips", (channel, vips) => {
 
 // Event quand une personne supprime un messages sur la chaîne twitch !
 clientTwitch.on("messagedeleted", (channel, username, deletedMessage, userstate) => {
+	let message = new Discord.RichEmbed()
+	.setTitle(`Message suprimé de ${username}`)
+	.setColor("#15f153")
+	.addField(`Le message de ${username} a était supprimé. Il contenait :`, `${deletedMessage}`)
+	channelLogMessage.send(message);
+
 	// Message LOGS
-	ChannelLog.send(`[LOG] : Le message de ${username} a était supprimé. Il contenait: ${deletedMessage}`)
+	// ChannelLog.send(`[LOG] : Le message de ${username} a était supprimé. Il contenait: ${deletedMessage}`)
 });
 
 // Evvent quand une personne rejion là première fois la chaîne twitch
