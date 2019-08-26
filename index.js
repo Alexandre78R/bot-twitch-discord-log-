@@ -206,13 +206,13 @@ clientTwitch.on('chat', (channel, user, message, self) => {
 clientTwitch.on("subscription", function (channel, username, method, message, userstate) {
 	// Log sur discord
 	let sub = new Discord.RichEmbed()
-	.setTitle(`Nouveau sub sur la chaîne !`)
+	.setTitle(`Une personne viens de subscription sur la chaîne !`)
 	.setColor("#15f153")
-	.setDescription(`Bienvenue à x !`)
+	.addField(`Bienvenue à ${username} ! Son message contenait :`, `${message}`)
 	channelLogSub.send(sub);
 
 	//Message sur le tchat de twitch
-	clientTwitch.action(channel1, `${username} a sub à la chaîne! Bienvenue à toi !`)
+	clientTwitch.action(channel1, `${username} c'est subscription à la chaîne!`)
 
 	console.log("Method", method)
 });
@@ -221,13 +221,13 @@ clientTwitch.on("subscription", function (channel, username, method, message, us
 clientTwitch.on("resub", function (channel, username, months, message, userstate, methods) {
 	// Log sur discord 
 	let resub = new Discord.RichEmbed()
-	.setTitle(`Nouveau re-sub sur la chaîne !`)
+	.setTitle(`Nouveau re-subscription sur la chaîne !`)
 	.setColor("#15f153")
-	.setDescription(`${username} est sub à la chaîne depuis ${months} mois ! Son message : ${message}`)
+	.addField(`${username} c'est re-subscription à la chaîne depuis ${months} mois ! Son message contenait :`, `${message}`)
 	channelLogSub.send(resub);
 
 	// Message sur le tchat de twitch
-	clientTwitch.action(channel1, `${username} est sub à la chaîne depuis ${months} mois ! `)
+	clientTwitch.action(channel1, `${username} est re-subscription à la chaîne depuis ${months} mois !`)
 
 	console.log("Method", method)
 });
@@ -237,17 +237,17 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 
 	if (userstate.bits === 1){
 		let cheer1 = new Discord.RichEmbed()
-		.setTitle(`Nouveau re-sub sur la chaîne !`)
+		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
-		.setDescription(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit !`)
+		.addField(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit ! Son message contenait :`,  `${message}`)
 		channelLog.send(cheer1);
 
 		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit !`)
 	}else{
 		let cheer = new Discord.RichEmbed()
-		.setTitle(`Nouveau re-sub sur la chaîne !`)
+		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
-		.setDescription(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
+		.addField(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait :`,  `${message}`)
 		channelLog.send(cheer);
 
 		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
@@ -258,12 +258,12 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
 
 	let host = new Discord.RichEmbed()
-	.setTitle(`Nouveau re-sub sur la chaîne !`)
+	.setTitle(`Host sur la chaîne !`)
 	.setColor("#15f153")
 	.setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
 	channelLog.send(host);
 
-	clientTwitch.action(channel1, ` Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
+	clientTwitch.action(channel1, `Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
 });
 
 //Event quand une personne to sur la chaîne twitch !
