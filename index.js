@@ -1,8 +1,8 @@
-//Connexion Discord 
-require("./connection/discord")
+// Express pour gestion port de la partie discord 
+const express = require("express");
 
-//Connexion Twitch 
-require("./connection/twitch")
+//Utilisation app pour express
+const app = express();
 
 //Api pour twitch
 const tmi = require('tmi.js');
@@ -20,7 +20,7 @@ var config = require("./config/config.json");
 var ChannelLog = null;
 
 //Nom de la chaine ou le bot fait la modération sur twitch
-var channel = config.streameur.username
+var channel1 = config.streameur.username
 
 //Option à la connexion de twitch
 const options = {
@@ -35,20 +35,69 @@ const options = {
 		username : config.twitch.username,
 		password: config.twitch.oauth,
 	},
-	channels : [channel],
+	channels : [channel1],
 };
 
 //Mise en place du bot twitch avec les options sur client
 const clientTwitch = new tmi.client(options);
 
+//Connexion du bot twitch
+clientTwitch.connect();
+
+//Message d'allumage du bot sur le tchat twitch
+clientTwitch.on('connected', (adress, port) => {
+    console.log("[Twitch] : " + clientTwitch.getUsername() + " s'est connecté sur : " + adress + ", port : " + port);
+    clientTwitch.action(channel1, 'Bonjour , je suis le bot en configuration. j"arrive avec le compte bot !');
+});
+
+//Fin connexion du bot twitch
+
+//Connexion du bot discord 
+
+//Génération du port random
+app.set('port', (process.env.PORT || Math.floor(Math.random() * Math.floor(5000))))
+
+app.listen(app.get('port'), function(){
+    console.log(`[Discord] : Le bot fonctionne sur le port : ${app.get('port')} `);
+})
+
+//En cas d'erreur pour le bot discord
+clientDiscord.on('warn', console.warn);
+clientDiscord.on('error', console.error);
+clientDiscord.on('disconnect', () => console.log('[Discord] : Je viens de me déconnecter, en m\'assurant que vous savez, je vais me reconnecter maintenant'));
+clientDiscord.on('reconnecting', () => console.log('[Discord] : Je reconnecte maintenant !'));
+
+
+//Clé du bot
+clientDiscord.login(config.discord.token);
+
+//Status du bot discord 
+clientDiscord.on('ready', () => {
+	//Génération du profils du bot sur discord.
+	clientDiscord.user.setPresence({ game: { name: "En développement By Alexandre78R", type : "STREAMING", url: "https://www.twitch.tv/jaxoou"}});
+	//Fix l'id du channel log sur discord
+	ChannelLog = clientDiscord.channels.get(config.discord.log);
+	
+	//Vérification du channel de log sur discord
+	if(ChannelLog === undefined){
+		console.log("[Discord] : Attention vous n'avez pas définie le channel log ou il est introuvable !")
+	}else{
+		console.log(`[Discord] : Mise en place du channel log sur ${ChannelLog.name}`)
+		console.log(`[Discord] : Connecté en tant que ${clientDiscord.user.tag}`)
+	}
+});
+
+//Fin connexion du bot discord
+
 // Début des commandes Discord
 
 var prefixDiscord = config.discord.prefix;
 
+
 //Commande test pour discord
 clientDiscord.on('message', message => {
 
-	if (message.content === prefixDiscord+'test') {
+	if (message.content === prefixDiscord + 'test') {
 		let reportEmbed = new Discord.RichEmbed()
 		.setTitle("Test message")
 		.setColor("#15f153")
@@ -65,7 +114,7 @@ clientDiscord.on('message', message => {
   //Fin des commandes Discord
 
   //Prefix de commande pour twitch 
-  const prefixTwitch = config.twitch.prefix;
+  const prefixTwitch = "!";
 
   //Gestion prefix
   function commandParser(message){
@@ -96,13 +145,14 @@ clientTwitch.on('chat', (channel, user, message, self) => {
        	switch(command){
 			//Commande de test
 		    case "test":
-			clientTwitch.say(channel, `${user['display-name']}, Vous avez taper la commande !test !`)
+			clientTwitch.say("alexandre78rg", `${user['display-name']}, Vous avez taper la commande !test !`)
 			ChannelLog.send(`[LOG] : Un viewers à utilisé la commande test !**`)
-		    break;
-
+			
+			break;
+			
 				//Message d'erreur si la commande n'existe pas.
 		    default:
-		       clientTwitch.say(channel, `${user['display-name']}, La Commande '` + command + "'' est non reconnue. Tapez " + prefix + "help pour la liste des commandes de " + client.getUsername());
+		       clientTwitch.say("alexandre78rg", `${user['display-name']}, La Commande '` + command + "'' est non reconnue. Tapez " + prefix + "help pour la liste des commandes de " + client.getUsername());
 			//ChannelLog.send(`[LOG] : La commande n'existe pas ! `)
 		}
     }
@@ -118,7 +168,7 @@ clientTwitch.on("subscription", function (channel, username, method, message, us
 	// Log sur discord
 	ChannelLog.send(`[LOG] : ${username} a sub à la chaîne ! Son Message : ${message}`)
 	//Message sur le tchat de twitch
-	clientTwitch.action(channel, `${username} a sub à la chaîne!`)
+	clientTwitch.action(channel1, `${username} a sub à la chaîne!`)
 });
 
 //Event quand une personne resub sur la chaine twitch !
@@ -126,7 +176,7 @@ clientTwitch.on("resub", function (channel, username, months, message, userstate
 	// Log sur discord
 	ChannelLog.send(`[LOG] : ${username} est sub à la chaîne depuis ${months} mois ! Son message : ${message}`)
 	// Message sur le tchat de twitch
-	clientTwitch.action(channel, `${username} est sub à la chaîne depuis ${months} mois ! `)
+	clientTwitch.action(channel1, `${username} est sub à la chaîne depuis ${months} mois ! `)
 });
 
 //Event quand une personne donne des cheer sur la chaîne twitch !
@@ -138,7 +188,7 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 //Event quand une personne host sur la chaîne twitch !
 clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
 	// Message sur le tchat de twitch
-	clientTwitch.action(channel, ` Merci pour le host ${username} ! ( ${viewers} )`)
+	clientTwitch.action(channel1, ` Merci pour le host ${username} ! ( ${viewers} )`)
 	ChannelLog.send(`[LOG] : Merci pour le host ${username} ! ( ${viewers} )`)
 });
 
@@ -155,7 +205,7 @@ clientTwitch.on("timeout", (channel, username, reason, duration, userstate) => {
 //Event quand une personne deviens vip sur la chaîne twitch !
 //Event non fontionnelle pour l'instant 
 clientTwitch.on("vips", (channel, vips) => {
-	// clientTwitch.action(channel, `L'utilisateur "${username}" est to pendant ${duration} !`)
+	// clientTwitch.action(channel1, `L'utilisateur "${username}" est to pendant ${duration} !`)
 	console.log(vips)
 	// ChannelLog.send(`[LOG] : L'utilisateur "${vips}" est devenue vip !`)
 });
