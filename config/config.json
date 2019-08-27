@@ -11,6 +11,7 @@
         "channelLogTo" : "Id du canal de log des to sur Discord",
         "channelLogMessage" : "Id du canal de log des messages sur Discord", 
         "channelLog" : "Id du canal de log sur Discord",
+        "channelLogNotif" : "Id du canal de log des notifs sur Discord",
         "prefix" : "Préfix du bot Discord", 
     },
     "streameur" : {
