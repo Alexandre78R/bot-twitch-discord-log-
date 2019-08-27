@@ -62,7 +62,7 @@ clientTwitch.connect();
 //Message d'allumage du bot sur le tchat twitch
 clientTwitch.on('connected', (adress, port) => {
     console.log("[Twitch] : " + clientTwitch.getUsername() + " s'est connecté sur : " + adress + ", port : " + port);
-    clientTwitch.action(channel1, 'Bonsoir tous mondes !');
+    // clientTwitch.action(channel1, 'Bonsoir tous mondes !');
 });
 
 //Fin connexion du bot twitch
@@ -214,11 +214,11 @@ clientTwitch.on("subscription", function (channel, username, method, message, us
 	let sub = new Discord.RichEmbed()
 	.setTitle(`Une personne viens de subscription sur la chaîne !`)
 	.setColor("#15f153")
-	.addField(`Bienvenue à ${username} ! Son message contenait :`, `${message}`)
+	.addField(`Bienvenue à ${username} ! Son message contenait :`, message === null ? "" : message)
 	channelLogSub.send(sub);
 
 	//Message sur le tchat de twitch
-	clientTwitch.action(channel1, `${username} c'est subscription à la chaîne!`)
+	clientTwitch.action(channel1, `${username} c'est subscription à la chaîne! Son message contenaît : ${message === null ? "" : message}`)
 
 	// console.log("Method", method)
 });
@@ -229,11 +229,11 @@ clientTwitch.on("resub", function (channel, username, months, message, userstate
 	let resub = new Discord.RichEmbed()
 	.setTitle(`Nouveau re-subscription sur la chaîne !`)
 	.setColor("#15f153")
-	.addField(`${username} c'est re-subscription à la chaîne depuis ${months} mois ! Son message contenait :`, `${message}`)
+	.addField(`${username} c'est re-subscription à la chaîne depuis ${months} mois ! Son message contenait :`, message === null ? "" : message)
 	channelLogSub.send(resub);
 
 	// Message sur le tchat de twitch
-	clientTwitch.action(channel1, `${username} est re-subscription à la chaîne depuis ${months} mois !`)
+	clientTwitch.action(channel1, `${username} est re-subscription à la chaîne depuis ${months} mois ! Son message contenaît : ${message === null ? "" : message}`)
 
 	// console.log("Method", method)
 });
@@ -245,7 +245,7 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 		let cheer1 = new Discord.RichEmbed()
 		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
-		.addField(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit ! Son message contenait :`,  `${message}`)
+		.addField(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit ! Son message contenait :`,  message === null ? "" : message)
 		channelLog.send(cheer1);
 
 		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit !`)
@@ -253,7 +253,7 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 		let cheer = new Discord.RichEmbed()
 		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
-		.addField(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait :`,  `${message}`)
+		.addField(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait :`,  message === null ? "" : message)
 		channelLog.send(cheer);
 
 		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
@@ -263,13 +263,25 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 //Event quand une personne host sur la chaîne twitch !
 clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
 
-	let host = new Discord.RichEmbed()
+	let hosted = new Discord.RichEmbed()
 	.setTitle(`Host sur la chaîne Twitch !`)
 	.setColor("#15f153")
 	.setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
-	channelLog.send(host);
+	channelLog.send(hosted);
 
 	clientTwitch.action(channel1, `Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
+});
+
+clientTwitch.on("hosting", (channel, target, viewers) => {
+	let hosting = new Discord.RichEmbed()
+	.setTitle(`Host sur la chaîne Twitch !`)
+	.setColor("#15f153")
+	.setDescription(`Merci pour le host de ${target} ! Bienvenue aux ${viewers} viewers !`)
+	channelLog.send(hosting);
+
+	clientTwitch.action(channel1, `Merci pour le host ${target} ! Bienvenue aux ${viewers} viewers !`)
+
+	console.log("channel", channel)
 });
 
 //Event quand une personne to sur la chaîne twitch !
