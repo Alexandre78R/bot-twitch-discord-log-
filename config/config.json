@@ -2,7 +2,7 @@
     "twitch" : { 
         "oauth" : "oauth du bot (https://twitchapps.com/tmi/)", 
         "username" : "username du bot Twitch",
-        "prefix" : "Préfix du bot Twitch", 
+        "prefix" : "Préfix du bot Twitch"
     },
     "discord" : { 
         "token" : "Clé du bot Discord", 
@@ -12,9 +12,9 @@
         "channelLogMessage" : "Id du canal de log des messages sur Discord", 
         "channelLog" : "Id du canal de log sur Discord",
         "channelLogNotif" : "Id du canal de log des notifs sur Discord",
-        "prefix" : "Préfix du bot Discord", 
+        "prefix" : "Préfix du bot Discord" 
     },
     "streameur" : {
-        "username" : "Username de la chaîne où le bot twitch feras la modération",  
+        "username" : "Username de la chaîne où le bot twitch feras la modération"  
     }
 }
