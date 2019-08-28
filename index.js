@@ -213,8 +213,6 @@ clientTwitch.on("subscription", function (channel, username, method, message, us
 
 	//Message sur le tchat de twitch
 	clientTwitch.action(channel1, `${username} c'est subscription à la chaîne! Son message contenaît : ${message === null ? "" : message}`)
-
-	// console.log("Method", method)
 });
 
 //Event quand une personne resub sur la chaine twitch !
@@ -228,13 +226,12 @@ clientTwitch.on("resub", function (channel, username, months, message, userstate
 
 	// Message sur le tchat de twitch
 	clientTwitch.action(channel1, `${username} est re-subscription à la chaîne depuis ${months} mois ! Son message contenaît : ${message === null ? "" : message}`)
-
-	// console.log("Method", method)
 });
 
 //Event quand une personne donne des cheer sur la chaîne twitch !
 clientTwitch.on("cheer", function (channel, userstate, message) {
 
+	//Notif sur discord 
 	if (userstate.bits === 1){
 		let cheer1 = new Discord.RichEmbed()
 		.setTitle(`Dons de cheer sur la chaîne !`)
@@ -250,12 +247,14 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 		.addField(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait :`,  message === null ? "" : message)
 		channelLogNotif.send(cheer);
 
+		//Message sur le tchat de twitch
 		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
 	}
 });
 
 //Event quand une personne host sur la chaîne twitch !
 clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
+	//Désactivé pour l'instant.
 
 	// let hosted = new Discord.RichEmbed()
 	// .setTitle(`Host sur la chaîne Twitch !`)
@@ -263,10 +262,16 @@ clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
 	// .setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
 	// channelLogNotif.send(hosted);
 
-	clientTwitch.action(channel1, `Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
+	console.log("username", username)
+	console.log("viewers", viewers)
+	console.log("autohost", autohost)
+
+	//Désactivé pour l'instant
+	// clientTwitch.action(channel1, `Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
 });
 
 clientTwitch.on("hosting", (channel, target, viewers) => {
+	//Désactivé pour l'instant 
 
 	// let hosting = new Discord.RichEmbed()
 	// .setTitle(`Host sur la chaîne Twitch !`)
@@ -275,15 +280,17 @@ clientTwitch.on("hosting", (channel, target, viewers) => {
 	// channelLogNotif.send(hosting);
 
 	console.log("target", target)
-
-	clientTwitch.action(channel1, `Merci pour le host ${target} ! Bienvenue aux ${viewers} viewers !`)
-
+	console.log("viewers", viewers)
 	console.log("channel", channel)
+
+	//Désactivé pour l'instant
+	// clientTwitch.action(channel1, `Merci pour le host ${target} ! Bienvenue aux ${viewers} viewers !`)
+
 });
 
 //Event quand une personne to sur la chaîne twitch !
 clientTwitch.on("timeout", (channel, username, reason, duration, userstate) => {
-	// client.action(channel, `L'utilisateur "${username}" est to pendant ${duration} !`)
+	// Notif sur discord
 	if(duration === 1){
 		let to1 = new Discord.RichEmbed()
 		.setTitle(`[LOG] TO`)
@@ -301,14 +308,17 @@ clientTwitch.on("timeout", (channel, username, reason, duration, userstate) => {
 
 // Event quand une personne supprime un messages sur la chaîne twitch !
 clientTwitch.on("messagedeleted", (channel, username, deletedMessage, userstate) => {
+	//Log sur le discord
 	let message = new Discord.RichEmbed()
-	.setTitle(`[LOG] : Message suprimé`)
+	.setTitle(`Message suprimé`)
 	.setColor("#15f153")
 	.addField(`Le message de ${username} a était supprimé. Il contenait :`, `${deletedMessage}`)
 	channelLogMessage.send(message);
 });
 
+//Event quand une personne prend un ban à vie sur la chaîne twitch
 clientTwitch.on("ban", (channel, username, reason, userstate) => {
+	//Notif sur discord
 	let ban = new Discord.RichEmbed()
 	.setTitle(`Ban sur ${username}`)
 	.setColor("#15f153")
@@ -316,8 +326,8 @@ clientTwitch.on("ban", (channel, username, reason, userstate) => {
 	channelLogTo.send(ban);	
 });
 
+//Event en test
 clientTwitch.on("subgift", (channel, username, streakMonths, recipient, methods, userstate) => {
-    // Do your stuff.
 	let senderCount = ~~userstate["msg-param-sender-count"];
 	console.log("senderCount", senderCount)
 	console.log("userneme", username)
@@ -325,15 +335,18 @@ clientTwitch.on("subgift", (channel, username, streakMonths, recipient, methods,
 	console.log("recipient", recipient)
 });
 
+//Event en test
 clientTwitch.on("submysterygift", (channel, username, numbOfSubs, methods, userstate) => {
-    // Do your stuff.
+
 	let senderCount = ~~userstate["msg-param-sender-count"];
 	console.log("senderCount", senderCount)
 	console.log("userneme", username)
 	console.log("numbOfSubs", numbOfSubs)
 });
 
+//Event si le mode sub du tchat est activé ou désactivé
 clientTwitch.on("subscribers", (channel, enabled) => {
+	//Notif sur discord
 	if (enabled === true){
 		let subOnlyT = new Discord.RichEmbed()
 		.setTitle(`Etat tchat abonné`)
@@ -349,7 +362,9 @@ clientTwitch.on("subscribers", (channel, enabled) => {
 	}
 });
 
+//Event si le slowmode est activé ou désactivé sur le tchat
 clientTwitch.on("slowmode", (channel, enabled, length) => {
+	//Notif sur discord
 	if (enabled === true){
 		let slowT = new Discord.RichEmbed()
 		.setTitle(`Etat slowmode ON`)
@@ -365,7 +380,9 @@ clientTwitch.on("slowmode", (channel, enabled, length) => {
 	}
 });
 
+//Event sile R9KBETA est activé ou désactivé 
 clientTwitch.on("r9kbeta", (channel, enabled) => {
+	//Notif sur discord
 	if (enabled === true){
 		let r9kbetaT = new Discord.RichEmbed()
 		.setTitle(`Etat r9kbeta ON`)
@@ -381,18 +398,22 @@ clientTwitch.on("r9kbeta", (channel, enabled) => {
 	}
 });
 
+//Event si une personne offre un sub à une autre personne
 clientTwitch.on("giftpaidupgrade", (channel, username, sender, userstate) => {
-	
+	//Notif sur discord
 	let subgift = new Discord.RichEmbed()
 	.setTitle(`Une personne viens de reçevoir un sub sur la chaîne !`)
 	.setColor("#15f153")
 	.addField(`Bienvenue à ${username} ! Merci du sub offert par :`, `${sender}`)
 	channelLogSub.send(subgift);
 
+	//Message sur le tchat de twitch
 	clientTwitch.action(channel1, `${username} à reçus subscription par ${sender}!`)
 });
 
+//Event si le mode emoteonly est activé ou désactivé
 clientTwitch.on("emoteonly", (channel, enabled) => {
+	//Notif discord
 	if (enabled === true){
 		let emoteonlyT = new Discord.RichEmbed()
 		.setTitle(`Etat emoteonly ON`)
@@ -408,7 +429,9 @@ clientTwitch.on("emoteonly", (channel, enabled) => {
 	}
 });
 
+//Event si un modérateur à nettoyer le tchat 
 clientTwitch.on("clearchat", (channel) => {
+	//Notif sur discord
 	let clearchat = new Discord.RichEmbed()
 	.setTitle(`Nettoyage du tchat`)
 	.setColor("#15f153")
@@ -416,10 +439,12 @@ clientTwitch.on("clearchat", (channel) => {
 	channelLog.send(clearchat);
 });
 
+//Event si le follower mode est activé ou désactivé :)
 clientTwitch.on("followersonly", (channel, enabled, length) => {
+	//Notif sur discord
 	if (enabled === true){
 		switch (length) {
-			case 0:
+			case 0: //Temps de folow de 0 minute
 				let followersonlyT0 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -427,7 +452,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT0);
 			break;
 
-			case 10:
+			case 10: //Temps de folow de 10 minutes.
 				let followersonlyT10 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -435,7 +460,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT10);
 			break;
 
-			case 30:
+			case 30: //Temps de folow de 30 minutes
 				let followersonlyT30 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -443,7 +468,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT30);
 			break;
 
-			case 60:
+			case 60: //Temps de folow de 1 heure
 				let followersonlyT60 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -451,7 +476,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT60);
 			break;
 
-			case 1440:
+			case 1440: //Temps de folow de 1 jour
 				let followersonlyT1440 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -459,7 +484,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT1440);
 			break;
 
-			case 10080:
+			case 10080: //Temps de folow de 1 semaine
 				let followersonlyT10080 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -467,7 +492,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT10080);
 			break;
 
-			case 43200:
+			case 43200: //Temps de folow de 1 mois
 				let followersonlyT43200 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -475,7 +500,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT43200);
 			break;
 
-			case 129600:
+			case 129600: //Temps de folow de 3 mois
 				let followersonlyT129600 = new Discord.RichEmbed()
 				.setTitle(`Etat followersonly ON`)
 				.setColor("#15f153")
@@ -483,7 +508,7 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 				channelLog.send(followersonlyT129600);
 			break;
 
-			default:
+			default: //Si c'est un autre temps par défault on l'affiche en minutes
 				if (length === 1){
 					let followersonlyTI1 = new Discord.RichEmbed()
 					.setTitle(`Etat followersonly ON`)
