@@ -186,12 +186,6 @@ clientTwitch.on('chat', (channel, user, message, self) => {
 			.setColor("#15f153")
 			.setDescription(`Un viewers à utilisé la commande " ${prefixDiscord}test " !`)
 			channelLogCommande.send(test);
-
-			// let message1 = new Discord.RichEmbed()
-			// .setTitle(`Message suprimé de username}`)
-			// .setColor("#15f153")
-			// .addField(`Le message de username} a était supprimé. Il contenait :`, `deletedMessage}`)
-			// channelLogTo.send(message1);
 			
 			break;
 				//Message d'erreur si la commande n'existe pas.
@@ -246,7 +240,7 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
 		.addField(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit ! Son message contenait :`,  message === null ? "" : message)
-		channelLog.send(cheer1);
+		channelLogNotif.send(cheer1);
 
 		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit !`)
 	}else{
@@ -254,7 +248,7 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
 		.addField(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait :`,  message === null ? "" : message)
-		channelLog.send(cheer);
+		channelLogNotif.send(cheer);
 
 		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
 	}
@@ -263,21 +257,24 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 //Event quand une personne host sur la chaîne twitch !
 clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
 
-	let hosted = new Discord.RichEmbed()
-	.setTitle(`Host sur la chaîne Twitch !`)
-	.setColor("#15f153")
-	.setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
-	channelLog.send(hosted);
+	// let hosted = new Discord.RichEmbed()
+	// .setTitle(`Host sur la chaîne Twitch !`)
+	// .setColor("#15f153")
+	// .setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
+	// channelLogNotif.send(hosted);
 
 	clientTwitch.action(channel1, `Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
 });
 
 clientTwitch.on("hosting", (channel, target, viewers) => {
-	let hosting = new Discord.RichEmbed()
-	.setTitle(`Host sur la chaîne Twitch !`)
-	.setColor("#15f153")
-	.setDescription(`Merci pour le host de ${target} ! Bienvenue aux ${viewers} viewers !`)
-	channelLog.send(hosting);
+
+	// let hosting = new Discord.RichEmbed()
+	// .setTitle(`Host sur la chaîne Twitch !`)
+	// .setColor("#15f153")
+	// .setDescription(`Merci pour le host de  ! Bienvenue aux ${viewers} viewers !`)
+	// channelLogNotif.send(hosting);
+
+	console.log("target", target)
 
 	clientTwitch.action(channel1, `Merci pour le host ${target} ! Bienvenue aux ${viewers} viewers !`)
 
@@ -302,20 +299,6 @@ clientTwitch.on("timeout", (channel, username, reason, duration, userstate) => {
 	}
 });
 
-//Event quand une personne se follow !
-clientTwitch.on("followersonly", (channel, enabled, length) => {
-	console.log("Channel", channel)
-	console.log("Enable",  enabled)
-	console.log("Length", length)
-	console.log("Folow 1")
-});
-
-clientTwitch.on("followers-only", (channel, enabled, length) => {
-	console.log("Channel", channel)
-	console.log("Enable",  enabled)
-	console.log("Length", length)
-	console.log("Folow 2")
-});
 // Event quand une personne supprime un messages sur la chaîne twitch !
 clientTwitch.on("messagedeleted", (channel, username, deletedMessage, userstate) => {
 	let message = new Discord.RichEmbed()
@@ -323,9 +306,6 @@ clientTwitch.on("messagedeleted", (channel, username, deletedMessage, userstate)
 	.setColor("#15f153")
 	.addField(`Le message de ${username} a était supprimé. Il contenait :`, `${deletedMessage}`)
 	channelLogMessage.send(message);
-
-	// Message LOGS
-	// ChannelLog.send(`[LOG] : Le message de ${username} a était supprimé. Il contenait: ${deletedMessage}`)
 });
 
 clientTwitch.on("ban", (channel, username, reason, userstate) => {
@@ -354,11 +334,19 @@ clientTwitch.on("submysterygift", (channel, username, numbOfSubs, methods, users
 });
 
 clientTwitch.on("subscribers", (channel, enabled) => {
-	let subOnly = new Discord.RichEmbed()
-	.setTitle(`Etat tchat abonné`)
-	.setColor("#15f153")
-	.addField(`Le tchat est en mode :`,enabled)
-	channelLogNotif.send(subOnly);	
+	if (enabled === true){
+		let subOnlyT = new Discord.RichEmbed()
+		.setTitle(`Etat tchat abonné`)
+		.setColor("#15f153")
+		.addField(`Le mode tchat abonné est activé !`)
+		channelLog.send(subOnlyT);	
+	}{
+		let subOnlyF = new Discord.RichEmbed()
+		.setTitle(`Etat tchat abonné`)
+		.setColor("#bc0000")
+		.addField(`Le mode tchat abonné est désactivé !`)
+		channelLog.send(subOnlyF);	
+	}
 });
 
 clientTwitch.on("slowmode", (channel, enabled, length) => {
@@ -367,13 +355,13 @@ clientTwitch.on("slowmode", (channel, enabled, length) => {
 		.setTitle(`Etat slowmode ON`)
 		.setColor("#15f153")
 		.addField(`Le slowmode est activé !`, `L'envois des messages lentes est de ${length} seccondes !`)
-		channelLogNotif.send(slowT);
+		channelLog.send(slowT);
 	}else{
 		let slowF = new Discord.RichEmbed()
 		.setTitle(`Etat slowmode OFF`)
-		.setColor("#15f153")
+		.setColor("#bc0000")
 		.setDescription(`Le slowmode est désactivé !`)
-		channelLogNotif.send(slowF);
+		channelLog.send(slowF);
 	}
 });
 
@@ -383,13 +371,13 @@ clientTwitch.on("r9kbeta", (channel, enabled) => {
 		.setTitle(`Etat r9kbeta ON`)
 		.setColor("#15f153")
 		.setDescription(`Le r9kbeta est activé !`)
-		channelLogNotif.send(r9kbetaT);
+		channelLog.send(r9kbetaT);
 	}else{
 		let r9kbetaF = new Discord.RichEmbed()
 		.setTitle(`Etat r9kbeta OFF`)
-		.setColor("#15f153")
+		.setColor("#bc0000")
 		.setDescription(`Le r9kbeta est désactivé !`)
-		channelLogNotif.send(r9kbetaF);
+		channelLog.send(r9kbetaF);
 	}
 });
 
@@ -410,13 +398,13 @@ clientTwitch.on("emoteonly", (channel, enabled) => {
 		.setTitle(`Etat emoteonly ON`)
 		.setColor("#15f153")
 		.setDescription(`Le emoteonly est activé !`)
-		channelLogNotif.send(emoteonlyT);
+		channelLog.send(emoteonlyT);
 	}else{
 		let emoteonlyF = new Discord.RichEmbed()
 		.setTitle(`Etat emoteonly OFF`)
-		.setColor("#15f153")
+		.setColor("#bc0000")
 		.setDescription(`Le emoteonly est désactivé !`)
-		channelLogNotif.send(emoteonlyF);
+		channelLog.send(emoteonlyF);
 	}
 });
 
@@ -425,24 +413,100 @@ clientTwitch.on("clearchat", (channel) => {
 	.setTitle(`Nettoyage du tchat`)
 	.setColor("#15f153")
 	.setDescription(`Un modérateurs viens de nettoyer le tchat !`)
-	channelLogNotif.send(clearchat);
+	channelLog.send(clearchat);
 });
 
 clientTwitch.on("followersonly", (channel, enabled, length) => {
-	// if (enabled === true){
-	// 	let followersonlyT = new Discord.RichEmbed()
-	// 	.setTitle(`Etat followersonly ON`)
-	// 	.setColor("#15f153")
-	// 	.addField(`Le followersonly est activé !`, `Le tchat ${length} `)
-	// 	channelLogNotif.send(followersonlyT);
-	// }else{
-	// 	let followersonlyF = new Discord.RichEmbed()
-	// 	.setTitle(`Etat slowmode OFF`)
-	// 	.setColor("#15f153")
-	// 	.setDescription(`Le slowmode est désactivé !`)
-	// 	channelLogNotif.send(followersonlyF);
-	// }
-	console.log(length)
+	if (enabled === true){
+		switch (length) {
+			case 0:
+				let followersonlyT0 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers !`)
+				channelLog.send(followersonlyT0);
+			break;
+
+			case 10:
+				let followersonlyT10 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis 10 minutes !`)
+				channelLog.send(followersonlyT10);
+			break;
+
+			case 30:
+				let followersonlyT30 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis 30 minutes !`)
+				channelLog.send(followersonlyT30);
+			break;
+
+			case 60:
+				let followersonlyT60 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis 1 heure !`)
+				channelLog.send(followersonlyT60);
+			break;
+
+			case 1440:
+				let followersonlyT1440 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis 1 jour !`)
+				channelLog.send(followersonlyT1440);
+			break;
+
+			case 10080:
+				let followersonlyT10080 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis 1 semaine !`)
+				channelLog.send(followersonlyT10080);
+			break;
+
+			case 43200:
+				let followersonlyT43200 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis 1 mois !`)
+				channelLog.send(followersonlyT43200);
+			break;
+
+			case 129600:
+				let followersonlyT129600 = new Discord.RichEmbed()
+				.setTitle(`Etat followersonly ON`)
+				.setColor("#15f153")
+				.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis 3 mois !`)
+				channelLog.send(followersonlyT129600);
+			break;
+
+			default:
+				if (length === 1){
+					let followersonlyTI1 = new Discord.RichEmbed()
+					.setTitle(`Etat followersonly ON`)
+					.setColor("#15f153")
+					.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis ${length} minuste !`)
+					channelLog.send(followersonlyTI1);  
+				}else{
+					let followersonlyTI = new Discord.RichEmbed()
+					.setTitle(`Etat followersonly ON`)
+					.setColor("#15f153")
+					.addField(`Le followersonly est activé !`, `Le tchat est réservé pour les followers depuis ${length} minustes !`)
+					channelLog.send(followersonlyTI); 
+				}
+		  }
+
+	}else{
+		let followersonlyF = new Discord.RichEmbed()
+		.setTitle(`Etat followersonly OFF`)
+		.setColor("#bc0000")
+		.setDescription(`Le followersonly est désactivé !`)
+		channelLog.send(followersonlyF);
+	}
+
 });
 
 //Fin des events Twitch
