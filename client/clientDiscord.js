@@ -16,6 +16,9 @@ var config = require("../config/config.json");
 //Import des commandes discord
 const cmds = require('../commands/cDiscord.js');
 
+//Import des commandes admins discord
+const cmdsAdmin = require('../commands/cAdminDiscord.js');
+
 //Connexion du bot discord 
 
 //Génération du port random
@@ -54,6 +57,7 @@ clientDiscord.on('message', msg => {
 
 function getCmdFunction(cmd) {
     const COMMANDS = {
+        'aide_modo': cmdsAdmin.aide_modo,
         'aide': cmds.aide,
         'serverinfo': cmds.serverinfo,
         'avatar': cmds.avatar,
