@@ -31,6 +31,12 @@ clientDiscord.on('error', console.error);
 clientDiscord.on('disconnect', () => console.log('[Discord] : Je viens de me déconnecter, en m\'assurant que vous savez, je vais me reconnecter maintenant'));
 clientDiscord.on('reconnecting', () => console.log('[Discord] : Je reconnecte maintenant !'));
 
+//Status du bot discord 
+clientDiscord.on('ready', () => {
+	//Génération du profils du bot sur discord.
+	clientDiscord.user.setPresence({ game: { name: "En développement By Alexandre78R", type : "STREAMING", url: "https://www.twitch.tv/jaxoou"}});
+});
+
 // Début des commandes Discord
 var prefixDiscord = config.discord.prefix;
 
@@ -48,7 +54,9 @@ clientDiscord.on('message', msg => {
 
 function getCmdFunction(cmd) {
     const COMMANDS = {
-        'test': cmds.test,
+        'aide': cmds.aide,
+        'serverinfo': cmds.serverinfo,
+        'avatar': cmds.avatar,
     }
     return COMMANDS[cmd] ? COMMANDS[cmd] : () => {};
 }

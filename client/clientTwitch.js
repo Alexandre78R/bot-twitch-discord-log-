@@ -32,27 +32,25 @@ const options = {
 let clientTwitch = new tmi.client(options);
 
 // Valeur null pour le canal de log commande sur discord
-var channelLogCommande = config.discord.channelLogCommande;
+var channelLogCommande = null;
 
 // Valeur null pour le canal de log sub sur discord
-var channelLogSub = config.discord.channelLogSub;
+var channelLogSub = null;
 
 // Valeur null pour le canal de log des to sur discord
-var channelLogTo = config.discord.channelLogTo;
+var channelLogTo = null;
 
 // Valeur null pour le canal de log des Messages sur discord
-var channelLogMessage = config.discord.channelLogMessage;
+var channelLogMessage = null;
 
 // Valeur null pour le canal de log sur discord
-var channelLog = config.discord.channelLog;
+var channelLog = null;
 
 // Valeur null pour le canal de log des notifs sur discord
-var channelLogNotif = config.discord.channelLogNotif;
+var channelLogNotif = null;
 
-//Status du bot discord 
+//Fix les channel d'envois des logs sur discord 
 clientDiscord.on('ready', () => {
-	//Génération du profils du bot sur discord.
-	clientDiscord.user.setPresence({ game: { name: "En développement By Alexandre78R", type : "STREAMING", url: "https://www.twitch.tv/jaxoou"}});
 	//Fix l'id des channel de log sur discord
 	channelLogCommande = clientDiscord.channels.get(config.discord.channelLogCommande);
 	channelLogSub = clientDiscord.channels.get(config.discord.channelLogSub);
@@ -60,6 +58,7 @@ clientDiscord.on('ready', () => {
 	channelLogMessage = clientDiscord.channels.get(config.discord.channelLogMessage);
 	channelLog = clientDiscord.channels.get(config.discord.channelLog);
 	channelLogNotif = clientDiscord.channels.get(config.discord.channelLogNotif);
+
 	//Vérification des channels de log sur discord
 	if(channelLogCommande === undefined){
 		console.log("[Discord] : Attention vous n'avez pas définie le channel log des commandes ou il est introuvable !")
