@@ -49,6 +49,9 @@ var channelLog = null;
 // Valeur null pour le canal de log des notifs sur discord
 var channelLogNotif = null;
 
+// Valeur null pour le canal de log des sanctions sur discord
+var channelLogSanction = null;
+
 //Fix les channel d'envois des logs sur discord 
 clientDiscord.on('ready', () => {
 	//Fix l'id des channel de log sur discord
@@ -58,6 +61,7 @@ clientDiscord.on('ready', () => {
 	channelLogMessage = clientDiscord.channels.get(config.discord.channelLogMessage);
 	channelLog = clientDiscord.channels.get(config.discord.channelLog);
 	channelLogNotif = clientDiscord.channels.get(config.discord.channelLogNotif);
+	channelLogSanction = clientDiscord.channels.get(config.discord.channelLogSanction);
 
 	//Vérification des channels de log sur discord
 	if(channelLogCommande === undefined){
@@ -72,6 +76,8 @@ clientDiscord.on('ready', () => {
 		console.log("[Discord] : Attention vous n'avez pas définie le channel log ou il est introuvable !")
 	} else if(channelLogNotif === undefined){
 		console.log("[Discord] : Attention vous n'avez pas définie le channel log des notifs ou il est introuvable !")
+	} else if(channelLogSanction === undefined){
+		console.log("[Discord] : Attention vous n'avez pas définie le channel log des sanctions ou il est introuvable !")
 	}else{
 		console.log(`[Discord] : Mise en place du channel log des commandes sur ${channelLogCommande.name} (ID : ${channelLogCommande.id})`)
 		console.log(`[Discord] : Mise en place du channel log des subs sur ${channelLogSub.name} (ID : ${channelLogSub.id})`)
@@ -79,6 +85,7 @@ clientDiscord.on('ready', () => {
 		console.log(`[Discord] : Mise en place du channel log des messages sur ${channelLogMessage.name} (ID : ${channelLogMessage.id})`)
 		console.log(`[Discord] : Mise en place du channel log sur ${channelLog.name} (ID : ${channelLog.id})`)
 		console.log(`[Discord] : Mise en place du channel log des notifs sur ${channelLogNotif.name} (ID : ${channelLogNotif.id})`)
+		console.log(`[Discord] : Mise en place du channel log des notifs sur ${channelLogSanction.name} (ID : ${channelLogSanction.id})`)
 		console.log(`[Discord] : Connecté en tant que ${clientDiscord.user.tag}`)
 	}
 });
@@ -143,18 +150,18 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 clientTwitch.on("hosted", function (channel, username, viewers, autohost) {
 	//Désactivé pour l'instant.
 
-	// let hosted = new Discord.RichEmbed()
-	// .setTitle(`Host sur la chaîne Twitch !`)
-	// .setColor("#15f153")
-	// .setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
-	// channelLogNotif.send(hosted);
+	let hosted = new Discord.RichEmbed()
+	.setTitle(`Host sur la chaîne Twitch !`)
+	.setColor("#15f153")
+	.setDescription(`Merci pour le host de ${username} ! Bienvenue aux ${viewers} viewers !`)
+	channelLogNotif.send(hosted);
 
 	console.log("username", username)
 	console.log("viewers", viewers)
 	console.log("autohost", autohost)
 
 	//Désactivé pour l'instant
-	// clientTwitch.action(channel1, `Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
+	clientTwitch.action(channel1, `Merci pour le host ${username} ! Bienvenue aux ${viewers} viewers !`)
 });
 
 clientTwitch.on("hosting", (channel, target, viewers) => {

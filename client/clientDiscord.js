@@ -41,9 +41,11 @@ clientDiscord.on('ready', () => {
 });
 
 // Début des commandes Discord
+
+//Préfix du bot 
 var prefixDiscord = config.discord.prefix;
 
-//Commande test pour discord
+//Les commandes pour discord
 clientDiscord.on('message', msg => {
     if (msg.author.bot || msg.channel.type != 'text')
         return;
@@ -53,11 +55,13 @@ clientDiscord.on('message', msg => {
 
     let cmd = msg.content.split(/\s+/)[0].slice(prefixDiscord.length).toLowerCase();
     getCmdFunction(cmd)(msg);
-  });
+});
 
+//Gestion des fichiers pour les commandes discord.
 function getCmdFunction(cmd) {
     const COMMANDS = {
         'aide_modo': cmdsAdmin.aide_modo,
+        'kick': cmdsAdmin.kick,
         'aide': cmds.aide,
         'serverinfo': cmds.serverinfo,
         'avatar': cmds.avatar,

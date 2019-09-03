@@ -1,7 +1,7 @@
 //Appelle du client Twitch
 const clientTwitch = require('./client/clientTwitch.js')
 
-//Appelle du client Twitch
+//Appelle du client Discord
 const clientDiscord = require('./client/clientDiscord.js')
 
 //Import de la configuration
