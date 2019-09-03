@@ -48,6 +48,7 @@ function aide_modo (message) {
     let aideembed = new Discord.RichEmbed()
     .setColor("#15f153")
     .addField(config.discord.prefix+"aide_modo", "Voir les commandes du bot, pour la modération !")
+    .addField(config.discord.prefix+"kick", `Kick un utilisateur // EX : ${config.discord.prefix}kick @nom_de_la_personne_a_kick raison.`)
     .setFooter("( Auto-destruction du message dans 30s ! )")
 
     //Envois de la réponse avec une auto-destruction de la réponse dans 30s
