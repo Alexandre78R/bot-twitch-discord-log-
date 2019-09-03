@@ -1,3 +1,4 @@
+
 # Présentation 
 
 C'est un bot twitch qui est relier avec un bot discord !
@@ -15,6 +16,10 @@ Liste des modules installer dedans  :
 - Libs Twitch ( npm install tmi.js --save)
 - Express pour le port du bot discord ( npm install express --save )
 
-# Configuration
+## Configuration
 
 La configuration est très simple à faire, sa seras juste à modifier les informations dans le fichier `./config/config.json` tous est expliquer de dans  !
+
+## Démarrage du bot 
+
+Vous devrez utilisé la commande `node index`!
