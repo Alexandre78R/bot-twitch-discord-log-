@@ -13,7 +13,10 @@ module.exports = {
 //Commande aide_modo
 function aide_modo (message) {
 
+    //Sécurité pour pas que le bot réagi avec lui-même
     if(message.author.bot) return;
+
+    //Permet d'éviter de répondre aux messages privés
     if(message.channel.type === "dm") return;
    
     //Prise en compte du préfix
@@ -61,7 +64,10 @@ function aide_modo (message) {
 //Commande Kick
 function kick (message) { // !kick @membre-a-kick raison
 
+    //Sécurité pour pas que le bot réagi avec lui-même
     if(message.author.bot) return;
+
+    //Permet d'éviter de répondre aux messages privés
     if(message.channel.type === "dm") return;
    
     //Prise en compte du préfix

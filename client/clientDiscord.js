@@ -34,10 +34,15 @@ clientDiscord.on('error', console.error);
 clientDiscord.on('disconnect', () => console.log('[Discord] : Je viens de me déconnecter, en m\'assurant que vous savez, je vais me reconnecter maintenant'));
 clientDiscord.on('reconnecting', () => console.log('[Discord] : Je reconnecte maintenant !'));
 
+// function testStream() {
+//     console.log("test")
+// }
 //Status du bot discord 
 clientDiscord.on('ready', () => {
 	//Génération du profils du bot sur discord.
 	clientDiscord.user.setPresence({ game: { name: "En développement By Alexandre78R", type : "STREAMING", url: "https://www.twitch.tv/jaxoou"}});
+    // testStream()
+    // setInterval(testStream, 25000)
 });
 
 // Début des commandes Discord

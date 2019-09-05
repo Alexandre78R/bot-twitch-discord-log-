@@ -90,10 +90,23 @@ clientDiscord.on('ready', () => {
 	}
 });
 
+function messageRandom() {
+	// On récupère le nombre de message qui se trouve dans la config et on le stock dans messageList
+	var messageList = config.twitch.messages;
+	//On prend le message sélectionné en random et on le stock dans la variable message
+	var message = Math.floor(Math.random() * messageList.length);
+	// console.log(messagesList[message])
+	//Puis on met le message random dans le tchat twitch
+	clientTwitch.action(channel1, messageList[message])
+}
+
 //Message d'allumage du bot sur le tchat twitch
 clientTwitch.on('connected', (adress, port) => {
     console.log("[Twitch] : " + clientTwitch.getUsername() + " s'est connecté sur : " + adress + ", port : " + port);
-    // clientTwitch.action(channel1, 'Bonsoir tous mondes !');
+	// clientTwitch.action(channel1, 'Bonsoir tous mondes !');
+	
+	//Interval de relance pour la function messageRandom pour metre un message sur le tchat 
+    setInterval(messageRandom, 300000) //millisecondes  (1 minute = 60000 millisecondes )
 });
 
 //Event quand une personne sub sur la chaine twitch !
