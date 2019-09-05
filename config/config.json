@@ -2,7 +2,14 @@
     "twitch" : { 
         "oauth" : "oauth du bot (https://twitchapps.com/tmi/)", 
         "username" : "username du bot Twitch",
-        "prefix" : "Préfix du bot Twitch"
+        "prefix" : "Préfix du bot Twitch",
+        "messages" : [
+        "Message 1",
+        "Message 2",
+        "Message 3",
+        "Message 4",
+        "Message 5"
+        ]
     },
     "discord" : { 
         "token" : "Clé du bot Discord", 

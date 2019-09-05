@@ -14,7 +14,10 @@ module.exports = {
 //Commande aide
 function aide (message) {
     
+    //Sécurité pour pas que le bot réagi avec lui-même
     if(message.author.bot) return;
+
+    //Permet d'éviter de répondre aux messages privés
     if(message.channel.type === "dm") return;
    
     //Prise en compte du prefix
@@ -38,7 +41,10 @@ function aide (message) {
 //Commande serverinfo
 function serverinfo (message) {
 
+    //Sécurité pour pas que le bot réagi avec lui-même
     if(message.author.bot) return;
+
+    //Permet d'éviter de répondre aux messages privés
     if(message.channel.type === "dm") return;
 
     //Prise en compte du prefix
@@ -93,7 +99,10 @@ function serverinfo (message) {
 //Commande avatar
 function avatar (message) {
 
+    //Sécurité pour pas que le bot réagi avec lui-même
     if(message.author.bot) return;
+
+    //Permet d'éviter de répondre aux messages privés
     if(message.channel.type === "dm") return;
 
     //Prise en compte du préfix
