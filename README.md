@@ -35,5 +35,5 @@ Les commandes pour les membres sur le discord :
 
 - `(prefix)aide` Voir les commandes du bot.
 - `(prefix)serverinfo` Indique les informations du serveur.
-- `(prefix)avatar` Report d'un membre du serveur // EX : !reportmembre message.
+- `(prefix)avatar` Pour voir votre image de profil.
 
