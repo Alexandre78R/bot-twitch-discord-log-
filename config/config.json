@@ -9,7 +9,8 @@
         "Message 3",
         "Message 4",
         "Message 5"
-        ]
+        ],
+        "timeMessage" : "Délais des annouces sur le tchat (INFOS :  Faut mètre en millisecondes donc (1 minute = 60000 millisecondes) !"
     },
     "discord" : { 
         "token" : "Clé du bot Discord", 

@@ -29,6 +29,7 @@ const options = {
 	channels : [channel1],
 };
 
+//Utilisation du clientTwitch sur les options de connexion
 let clientTwitch = new tmi.client(options);
 
 // Valeur null pour le canal de log commande sur discord
@@ -93,9 +94,10 @@ clientDiscord.on('ready', () => {
 function messageRandom() {
 	// On récupère le nombre de message qui se trouve dans la config et on le stock dans messageList
 	var messageList = config.twitch.messages;
+
 	//On prend le message sélectionné en random et on le stock dans la variable message
 	var message = Math.floor(Math.random() * messageList.length);
-	// console.log(messagesList[message])
+
 	//Puis on met le message random dans le tchat twitch
 	clientTwitch.action(channel1, messageList[message])
 }
@@ -106,7 +108,7 @@ clientTwitch.on('connected', (adress, port) => {
 	// clientTwitch.action(channel1, 'Bonsoir tous mondes !');
 	
 	//Interval de relance pour la function messageRandom pour metre un message sur le tchat 
-    setInterval(messageRandom, 300000) //millisecondes  (1 minute = 60000 millisecondes )
+	setInterval(messageRandom, config.twitch.timeMessage) //millisecondes  (1 minute = 60000 millisecondes )
 });
 
 //Event quand une personne sub sur la chaine twitch !
@@ -115,11 +117,11 @@ clientTwitch.on("subscription", function (channel, username, method, message, us
 	let sub = new Discord.RichEmbed()
 	.setTitle(`Une personne viens de subscription sur la chaîne !`)
 	.setColor("#15f153")
-	.addField(`Bienvenue à ${username} ! Son message contenait :`, message === null ? "" : message)
+	.addField(`Bienvenue à ${username} ! Son message contenait :`, message == null ? "Il n'y a pas de message" : message)
 	channelLogSub.send(sub);
 
 	//Message sur le tchat de twitch
-	clientTwitch.action(channel1, `${username} c'est subscription à la chaîne! Son message contenaît : ${message === null ? "" : message}`)
+	clientTwitch.action(channel1, `${username} c'est subscription à la chaîne! Son message contenaît : ${message == null ? "Il n'y a pas de message" : message}`)
 });
 
 //Event quand une personne resub sur la chaine twitch !
@@ -128,11 +130,11 @@ clientTwitch.on("resub", function (channel, username, months, message, userstate
 	let resub = new Discord.RichEmbed()
 	.setTitle(`Nouveau re-subscription sur la chaîne !`)
 	.setColor("#15f153")
-	.addField(`${username} c'est re-subscription à la chaîne depuis ${months} mois ! Son message contenait :`, message === null ? "" : message)
+	.addField(`${username} c'est re-subscription à la chaîne depuis ${months} mois ! Son message contenait :`, message == null ? "Il n'y a pas de message" : message)
 	channelLogSub.send(resub);
 
 	// Message sur le tchat de twitch
-	clientTwitch.action(channel1, `${username} est re-subscription à la chaîne depuis ${months} mois ! Son message contenaît : ${message === null ? "" : message}`)
+	clientTwitch.action(channel1, `${username} est re-subscription à la chaîne depuis ${months} mois ! Son message contenaît : ${message == null ? "Il n'y a pas de message" : message}`)
 });
 
 //Event quand une personne donne des cheer sur la chaîne twitch !
@@ -143,19 +145,19 @@ clientTwitch.on("cheer", function (channel, userstate, message) {
 		let cheer1 = new Discord.RichEmbed()
 		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
-		.addField(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit ! Son message contenait :`,  message === null ? "" : message)
+		.addField(`Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit ! Son message contenait :`,  message == null ? "Il n'y a pas de message" : message)
 		channelLogNotif.send(cheer1);
 
-		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit !`)
+		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donné ${userstate.bits} bit ! Son message contenait : ${message == null ? "Il n'y a pas de message" : message}`)
 	}else{
 		let cheer = new Discord.RichEmbed()
 		.setTitle(`Dons de cheer sur la chaîne !`)
 		.setColor("#15f153")
-		.addField(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait :`,  message === null ? "" : message)
+		.addField(`Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait :`,  message == null ? "Il n'y a pas de message" : message)
 		channelLogNotif.send(cheer);
 
 		//Message sur le tchat de twitch
-		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits !`)
+		clientTwitch.action(channel1, `Merci à ${userstate.username} d'avoir donnés ${userstate.bits} bits ! Son message contenait : ${message == null ? "Il n'y a pas de message" : message}`)
 	}
 });
 
@@ -442,6 +444,72 @@ clientTwitch.on("followersonly", (channel, enabled, length) => {
 });
 
 //Fin des events Twitch
+
+//Prefix de commande pour twitch 
+const prefixTwitch = "!";
+
+//Gestion prefix
+function commandParser(message){
+  let prefixEscaped = prefixTwitch.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+  let regex = new RegExp("^" + prefixEscaped + "([a-zA-Z]+)\s?(.*)");
+  return regex.exec(message);
+}
+
+//Début des commandes Twitch
+
+function infoChannel(){
+    clientTwitch.api({
+        url: "http://tmi.twitch.tv/group/user/" + channel1 + "/chatters",
+        method: "GET"
+    }, function(err, res, body) {
+		// console.log(body)
+		clientTwitch.action(channel1, `En ce moment il y a ${body.chatter_count} ${body.chatter_count == 1 ? "viewer" :  "viewers"} !`)
+    });
+}
+//Gestion des commandes sur twitch
+clientTwitch.on('chat', (channel, user, message, self) => {
+	//Si le message via du bot il stop les fonctions.
+	if (self) return;
+
+		// client.say(channel, user['display-name'] + " a dit " + message );
+		let commands = commandParser(message);
+
+		//Les agument des commandes après le prefix
+		if(commands){
+			// Nom de la commande
+			let command = commands[1];
+
+		//Un paramètre mais désactivé pour raison que l'on utilise pas.
+			// let param = commands[2];
+		
+		//Liste des commandes
+			switch(command){
+				//Commande de jeux
+				case "test":
+					//Vérification si t'es bien un modérateur sur la chaine
+					if(user.mod || user['user-type'] === 'mod') {
+						clientTwitch.action(channel1, `Oui tu peut utilisé cette commande !`)
+					//Vérification que tu sois bien propriétaire du channel pour éffectuer la commande
+					}else if (user.mod || user['username'].toLowerCase() === config.streameur.username.toLowerCase()) {
+						clientTwitch.action(channel1, `Oui tu peut utilisé cette commande !`)
+					}else{
+						//Sion message tu n'as pa l'autorisation de l'utilisé 
+						clientTwitch.action(channel1, `Non tu ne peut pas utilisé cette commande !`)					
+					}
+				break;
+				//Commande de stats
+				case "infochannel":
+					infoChannel()
+				break;
+				//Message d'erreur si la commande n'existe pas.
+			default:
+				console.log(`La commande " ${command} " n'existe pas !`)
+				// clientTwitch.action(channel1, `La commande " ${command} " n'existe pas !`)	
+		}
+	}
+});
+
+//Fin des commandes Twitch
 
 //Exportation du clientTwitch
 module.exports = clientTwitch

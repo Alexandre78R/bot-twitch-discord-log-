@@ -67,6 +67,7 @@ function getCmdFunction(cmd) {
     const COMMANDS = {
         'aide_modo': cmdsAdmin.aide_modo,
         'kick': cmdsAdmin.kick,
+        'test': cmds.test,
         'aide': cmds.aide,
         'serverinfo': cmds.serverinfo,
         'avatar': cmds.avatar,

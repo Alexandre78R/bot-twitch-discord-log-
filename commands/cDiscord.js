@@ -6,10 +6,52 @@ const Discord = require("discord.js");
 
 //Module export des commandes qui sont appeler dans le fichier clientDisocrd.js
 module.exports = {
+    'test': test,
     'aide': aide,
     'serverinfo' : serverinfo,
     'avatar' : avatar,
 } 
+
+//! Commande test (ATTENTION c'est une commande pour faire des tests donc à ne pas prendre en compte)
+function test (message){
+    //Sécurité pour pas que le bot réagi avec lui-même
+    if(message.author.bot) return;
+
+    //Permet d'éviter de répondre aux messages privés
+    if(message.channel.type === "dm") return;
+   
+    //Prise en compte du prefix
+    if (message.length == 1){
+        if (message[0].charAt(0) == config.discord.prefix) 
+            message[0] = message[0].slice(1);
+
+    }
+    //Variable de vérifiction de la mention et la raison
+    let messageArray = message.content.split(" ");
+    let args = messageArray.slice(1);
+
+    //Création du message d'errreur 
+    let errorM = new Discord.RichEmbed()
+    .setTitle("Réponse de la commande :")
+    .setColor("#bc0000")
+    .addField(":x: error pas d'argument !", "👮Merci de refaire la commande.")
+    .setFooter("( Auto-destruction du message dans 10s ! )")
+    message.delete().catch(O_o=>{});
+
+    //Vérification si il y a un argument
+    let num = args[0];
+
+    //Sinon on redirige sur le message d'erreur.
+    if(!num) return message.channel.send(errorM).then(message => {message.delete(6000)});
+
+    //Création de la réponse
+    let testEmbed = new Discord.RichEmbed()
+    .setColor("#15f153")
+    .addField("test commande", num == 1 ? num : "Ce n'est pas le chiffre 1")
+
+    message.channel.send(testEmbed)
+        
+}
 
 //Commande aide
 function aide (message) {
@@ -98,28 +140,28 @@ function serverinfo (message) {
 
 //Commande avatar
 function avatar (message) {
+     message.reply("test")
+    // //Sécurité pour pas que le bot réagi avec lui-même
+    // if(message.author.bot) return;
 
-    //Sécurité pour pas que le bot réagi avec lui-même
-    if(message.author.bot) return;
+    // //Permet d'éviter de répondre aux messages privés
+    // if(message.channel.type === "dm") return;
 
-    //Permet d'éviter de répondre aux messages privés
-    if(message.channel.type === "dm") return;
+    // //Prise en compte du préfix
+    // if (message.length == 1) {
+    //     if (message[0].charAt(0) == config.discord.prefix)
+    //         message[0] = message[0].slice(1);
+    // }
 
-    //Prise en compte du préfix
-    if (message.length == 1) {
-        if (message[0].charAt(0) == config.discord.prefix)
-            message[0] = message[0].slice(1);
-    }
+    // //Création de la réponse
+    // let avatarEmbed = new Discord.RichEmbed()
+    // .setTitle(`Ton image de profil.`)
+    // .setColor("#15f153")
+    // .setImage(`${message.author.avatarURL}`)
+    // .setURL(`${message.author.avatarURL}`)
+    // .setDescription(`[Lien direct vers l'image](${message.author.avatarURL})`)
+    // .setAuthor(`Par ${message.author.username} - Informations`, message.author.avatarURL);
 
-    //Création de la réponse
-    let avatarEmbed = new Discord.RichEmbed()
-    .setTitle(`Ton image de profil.`)
-    .setColor("#15f153")
-    .setImage(`${message.author.avatarURL}`)
-    .setURL(`${message.author.avatarURL}`)
-    .setDescription(`[Lien direct vers l'image](${message.author.avatarURL})`)
-    .setAuthor(`Par ${message.author.username} - Informations`, message.author.avatarURL);
-
-    //Envoie de la réponse
-    message.channel.send(avatarEmbed);
+    // //Envoie de la réponse
+    // message.channel.send(avatarEmbed);
 }
