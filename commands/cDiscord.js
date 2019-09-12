@@ -140,28 +140,28 @@ function serverinfo (message) {
 
 //Commande avatar
 function avatar (message) {
-     message.reply("test")
-    // //Sécurité pour pas que le bot réagi avec lui-même
-    // if(message.author.bot) return;
 
-    // //Permet d'éviter de répondre aux messages privés
-    // if(message.channel.type === "dm") return;
+    //Sécurité pour pas que le bot réagi avec lui-même
+    if(message.author.bot) return;
 
-    // //Prise en compte du préfix
-    // if (message.length == 1) {
-    //     if (message[0].charAt(0) == config.discord.prefix)
-    //         message[0] = message[0].slice(1);
-    // }
+    //Permet d'éviter de répondre aux messages privés
+    if(message.channel.type === "dm") return;
 
-    // //Création de la réponse
-    // let avatarEmbed = new Discord.RichEmbed()
-    // .setTitle(`Ton image de profil.`)
-    // .setColor("#15f153")
-    // .setImage(`${message.author.avatarURL}`)
-    // .setURL(`${message.author.avatarURL}`)
-    // .setDescription(`[Lien direct vers l'image](${message.author.avatarURL})`)
-    // .setAuthor(`Par ${message.author.username} - Informations`, message.author.avatarURL);
+    //Prise en compte du préfix
+    if (message.length == 1) {
+        if (message[0].charAt(0) == config.discord.prefix)
+            message[0] = message[0].slice(1);
+    }
 
-    // //Envoie de la réponse
-    // message.channel.send(avatarEmbed);
+    //Création de la réponse
+    let avatarEmbed = new Discord.RichEmbed()
+    .setTitle(`Ton image de profil.`)
+    .setColor("#15f153")
+    .setImage(`${message.author.avatarURL}`)
+    .setURL(`${message.author.avatarURL}`)
+    .setDescription(`[Lien direct vers l'image](${message.author.avatarURL})`)
+    .setAuthor(`Par ${message.author.username} - Informations`, message.author.avatarURL);
+
+    //Envoie de la réponse
+    message.channel.send(avatarEmbed);
 }
